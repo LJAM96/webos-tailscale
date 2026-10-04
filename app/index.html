@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tailscale</title><link rel="stylesheet" href="styles.css">
+<script defer src="vendor/webOSTV.js"></script><script defer src="vendor/qrcodegen.js"></script><script defer src="app.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<header class="app-header"><h1>Tailscale</h1><span class="preview-label">LG TV · Early preview</span><nav id="root-nav" aria-label="Main navigation"><button id="nav-status" data-route="status" aria-current="page">Status</button><button id="nav-settings" data-route="settings">Settings</button></nav></header>
+<div id="child-header" class="child-header" hidden><button id="back-button" class="button secondary">Back</button><div><p id="parent-title" class="supporting"></p><h2 id="screen-title"></h2></div></div>
+<main id="main-content">
+<section id="screen-status" class="screen" aria-labelledby="connection-heading">
+<div class="status-layout"><div class="connection-panel">
+<div id="connection-state" class="connection-state" data-state="checking"><span class="state-marker" aria-hidden="true"></span><h2 id="connection-heading" role="status" aria-live="polite">Checking connection…</h2></div>
+<p id="connection-description" class="supporting">Reading the background service.</p>
+<dl class="identity-list"><div><dt>This TV</dt><dd id="tv-name">Not available yet</dd></div><div><dt>Tailnet</dt><dd id="tailnet-name">Not available yet</dd></div><div><dt>Tailscale address</dt><dd id="tv-address" class="address">Not assigned yet</dd></div></dl>
+<div class="actions"><button id="connection-action" class="button primary" disabled>Checking…</button></div><p id="freshness" class="supporting"></p>
+</div><aside class="status-aside" aria-label="Connection information">
+<button id="open-devices" class="destination" data-route="devices"><span>Devices</span><span id="peer-summary" class="supporting">Available when connected</span></button>
+<button id="open-details" class="destination" data-route="details"><span>Connection details</span><span class="supporting">Addresses, network mode and service</span></button>
+<button id="status-troubleshooting" class="destination" data-route="troubleshooting" hidden><span>Troubleshooting</span><span class="supporting">Check the background service</span></button>
+<p class="background-note">Closing this app does not disconnect Tailscale.</p></aside></div>
+</section>
+<section id="screen-devices" class="screen" aria-label="Devices" hidden>
+<div class="section-toolbar"><p id="devices-count" class="supporting"></p><button id="refresh-devices" class="button secondary">Refresh devices</button></div>
+<div id="devices-feedback" class="feedback" role="status"></div><div id="devices-scroll" class="scroll-region" tabindex="0" aria-label="Devices list; use up and down to scroll"><ul id="device-list" class="device-list"></ul></div>
+</section>
+<section id="screen-details" class="screen" aria-label="Connection details" hidden><p id="details-freshness" class="supporting"></p><dl id="connection-details" class="detail-list"></dl><button class="button secondary" data-route="troubleshooting">Troubleshooting</button></section>
+<section id="screen-settings" class="screen" aria-labelledby="settings-heading" hidden>
+<h2 id="settings-heading">Settings</h2><div class="settings-layout"><div><h3>Connection</h3>
+<label class="setting-row" for="pref-startOnBoot"><span><span class="setting-label">Connect on boot</span><span id="hint-startOnBoot" class="supporting">Reconnect automatically when the TV starts.</span></span><input id="pref-startOnBoot" type="checkbox" data-pref="startOnBoot" aria-describedby="hint-startOnBoot" disabled></label>
+<button class="destination" data-route="advanced"><span>Advanced network settings</span><span class="supporting">MagicDNS, subnet routes and Tailscale SSH</span></button></div><div><h3>Support</h3><button class="destination" data-route="troubleshooting"><span>Troubleshooting</span><span class="supporting">Service checks and technical details</span></button><h3>Account</h3><p id="account-summary" class="supporting">Account information not available.</p><button id="sign-out" class="button secondary danger">Sign out</button></div></div>
+</section>
+<section id="screen-advanced" class="screen" aria-label="Advanced network settings" hidden>
+<p class="supporting">These options can affect connectivity. Their availability depends on the TV and your tailnet.</p>
+<label class="setting-row" for="pref-acceptDNS"><span><span class="setting-label">Use MagicDNS</span><span id="hint-acceptDNS" class="supporting">Use tailnet DNS names. Experimental on webOS; may conflict with the TV’s DNS settings.</span></span><input id="pref-acceptDNS" type="checkbox" data-pref="acceptDNS" aria-describedby="hint-acceptDNS" disabled></label>
+<label class="setting-row" for="pref-acceptRoutes"><span><span class="setting-label">Accept subnet routes</span><span id="hint-acceptRoutes" class="supporting">Reach networks shared by tailnet devices. Confirm that your local network remains reachable.</span></span><input id="pref-acceptRoutes" type="checkbox" data-pref="acceptRoutes" aria-describedby="hint-acceptRoutes" disabled></label>
+<label class="setting-row" for="pref-enableSSH"><span><span class="setting-label">Tailscale SSH</span><span id="hint-enableSSH" class="supporting">Allow SSH access to this TV through Tailscale. Your tailnet policy must also allow it.</span></span><input id="pref-enableSSH" type="checkbox" data-pref="enableSSH" aria-describedby="hint-enableSSH" disabled></label>
+</section>
+<section id="screen-troubleshooting" class="screen" aria-label="Troubleshooting" hidden><div class="section-toolbar"><p class="supporting">Check what the controller can read from the background service.</p><button id="refresh-diagnostics" class="button secondary">Refresh checks</button></div><div id="diagnostics-feedback" class="feedback" role="status"></div><dl id="diagnostic-summary" class="detail-list"></dl><button id="open-raw" class="button secondary" data-route="raw">Technical details</button></section>
+<section id="screen-raw" class="screen" aria-label="Raw diagnostics" hidden><p class="supporting">Complete service response for troubleshooting.</p><pre id="raw-diagnostics" class="scroll-region" tabindex="0" aria-label="Raw diagnostics; use up and down to scroll">No diagnostic response yet.</pre></section>
+<section id="screen-auth" class="screen" aria-label="Sign in" hidden><div class="auth-layout"><div><div id="qr-box" aria-label="Sign-in QR code"></div><p id="qr-feedback" class="supporting" role="status"></p></div><div><h3>Sign in on your phone</h3><ol class="instructions"><li>Scan the code or open the address below.</li><li>Sign in to Tailscale and follow the instructions.</li><li>Wait for this TV to connect. Your tailnet may require administrator approval.</li></ol><p id="auth-url" class="address"></p><p id="auth-progress" class="supporting" role="status"></p><div class="actions"><button id="refresh-auth" class="button secondary">Refresh sign-in code</button><button id="close-auth" class="button secondary">Close</button></div></div></div></section>
+<div id="save-bar" class="save-bar" hidden><p id="save-state" role="status">Loading settings…</p><div class="actions"><button id="retry-preferences" class="button secondary" hidden>Retry loading</button><button id="discard-settings" class="button secondary" disabled>Discard changes</button><button id="save-settings" class="button primary" disabled>Save settings</button></div></div>
+<div id="operation-feedback" class="feedback error" role="alert" hidden><p id="operation-message"></p><div class="actions"><button id="retry-operation" class="button secondary">Retry</button><button class="button secondary" data-route="troubleshooting">Troubleshooting</button><button id="dismiss-error" class="button secondary">Dismiss</button></div></div>
+</main>
+<footer><span id="app-version">v0.4.7</span><span>Unofficial client · Rooted LG webOS</span></footer>
+</div>
+<dialog id="confirmation" aria-labelledby="confirmation-title" aria-describedby="confirmation-description"><h2 id="confirmation-title"></h2><p id="confirmation-description"></p><div id="confirmation-actions" class="actions"></div></dialog>
+<template id="device-row-template"><li class="device-row"><div><span class="device-name"></span><span class="device-host supporting"></span></div><span class="device-status"></span><div class="device-meta"><span class="device-address address"></span><span class="device-os supporting"></span></div></li></template>
+</body>
+</html>

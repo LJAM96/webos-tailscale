@@ -1,0 +1,26 @@
+#!/bin/sh
+# webosbrew init.d hook: start Tailscale supervisor at boot.
+# Must exit fast and never block boot. Supervisor handles retries.
+SVC_DIR=/media/developer/apps/usr/palm/services/com.ljam.tailscale.service
+SUP="$SVC_DIR/supervisor.sh"
+RUN_DIR=/var/run/tailscale
+
+[ -x "$SUP" ] || [ -f "$SUP" ] || exit 0
+mkdir -p "$RUN_DIR" /var/lib/webosbrew/tailscale
+chmod 0700 /var/lib/webosbrew/tailscale
+
+exec 9>"$RUN_DIR/hook.lock" 2>/dev/null || exit 0
+flock -n 9 || exit 0
+
+# already running?
+if [ -f "$RUN_DIR/supervisor.pid" ] && kill -0 "$(cat "$RUN_DIR/supervisor.pid" 2>/dev/null)" 2>/dev/null; then
+  exit 0
+fi
+
+SVC_DIR="$SVC_DIR" nohup sh "$SUP" run >> /var/lib/webosbrew/tailscale/hook.log 2>&1 < /dev/null &
+# brief bounded wait for socket so early UI has a chance; never block boot
+for _ in $(seq 1 10); do
+  [ -S "$RUN_DIR/tailscaled.sock" ] && break
+  sleep 1
+done
+exit 0

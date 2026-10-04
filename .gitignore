@@ -1,0 +1,14 @@
+# Fetched upstream binaries (reproducible via scripts/fetch-tailscale.sh)
+daemon/bin/
+
+# Build outputs
+dist/
+.ipk-stage/
+
+# Tool local state
+.impeccable/
+
+# macOS / generic
+.DS_Store
+*.log
+node_modules/

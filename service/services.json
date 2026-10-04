@@ -1,0 +1,21 @@
+{
+  "id": "com.ljam.tailscale.service",
+  "description": "Tailscale privileged service (early preview, diagnostics only)",
+  "services": [
+    {
+      "name": "com.ljam.tailscale.service",
+      "description": "Diagnostics and daemon control",
+      "commands": [
+        { "name": "status", "description": "daemon and network status" },
+        { "name": "getDiagnostics", "description": "readonly diagnostics bundle" },
+        { "name": "connect", "description": "start daemon, bring tailnet up" },
+        { "name": "disconnect", "description": "take tailnet down" },
+        { "name": "getAuthUrl", "description": "pending login URL, if any" },
+        { "name": "logout", "description": "sign out, delete node identity" },
+        { "name": "getPeers", "description": "tailnet device list with presence" },
+        { "name": "getPreferences", "description": "read routing preferences" },
+        { "name": "setPreferences", "description": "write and apply routing preferences" }
+      ]
+    }
+  ]
+}

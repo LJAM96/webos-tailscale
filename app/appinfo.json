@@ -1,0 +1,15 @@
+{
+  "id": "com.ljam.tailscale",
+  "version": "0.4.7",
+  "vendor": "ljam",
+  "type": "web",
+  "main": "index.html",
+  "title": "Tailscale",
+  "icon": "assets/icon80.png",
+  "largeIcon": "assets/icon130.png",
+  "splashBackground": "assets/splash.png",
+  "bgColor": "#0f172a",
+  "iconColor": "#0f172a",
+  "appDescription": "Tailscale client controller (early preview, diagnostics only)",
+  "disableBackHistoryAPI": true
+}
