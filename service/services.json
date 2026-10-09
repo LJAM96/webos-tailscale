@@ -1,9 +1,9 @@
 {
-  "id": "com.ljam.tailscale.service",
-  "description": "Tailscale privileged service (early preview, diagnostics only)",
+  "id": "com.ljam96.tailscale.service",
+  "description": "Tailscale privileged service",
   "services": [
     {
-      "name": "com.ljam.tailscale.service",
+      "name": "com.ljam96.tailscale.service",
       "description": "Diagnostics and daemon control",
       "commands": [
         { "name": "status", "description": "daemon and network status" },
@@ -14,7 +14,8 @@
         { "name": "logout", "description": "sign out, delete node identity" },
         { "name": "getPeers", "description": "tailnet device list with presence" },
         { "name": "getPreferences", "description": "read routing preferences" },
-        { "name": "setPreferences", "description": "write and apply routing preferences" }
+        { "name": "setPreferences", "description": "write and apply routing preferences" },
+        { "name": "updateDaemon", "description": "explicit user-initiated daemon update with restart" }
       ]
     }
   ]

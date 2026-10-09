@@ -25,9 +25,9 @@ The documented use case is an owner or operator of a rooted LG B4 who needs to c
 
 ## Capabilities and Constraints
 
-The current source includes Status and Settings screens, connection controls, login QR display, sign out, device information, and advanced diagnostics. Settings include starting on boot, accepting DNS, accepting subnet routes, LAN access, and Tailscale SSH. Source presence does not establish successful operation on the target TV.
+The current source includes Status and Settings screens, connection controls, login QR display, sign out, device information, and advanced diagnostics. Settings include starting on boot, accepting DNS, accepting subnet routes, and Tailscale SSH. LAN access is a backend default, not an exposed UI setting. Source presence does not establish successful operation on the target TV.
 
-The packaged application describes itself as an early preview, diagnostics only. The implementation plan is the record of intended capabilities, not evidence that all goals have shipped or passed device validation.
+The application metadata describes an unofficial Tailscale controller for rooted LG webOS. The implementation plan is the record of intended capabilities, not evidence that all goals have shipped or passed device validation.
 
 - Use the official Tailscale daemon and standard control interfaces rather than implementing the networking protocol.
 - Keep privileged operations outside the UI. The current Luna service brokers schema-validated requests to the root supervisor.
@@ -39,12 +39,12 @@ The packaged application describes itself as an early preview, diagnostics only.
 
 ## Brand Commitments
 
-The existing application title is Tailscale and its application ID is `com.ljam.tailscale`. Preserve factual product naming and existing assets; no additional brand or voice commitment was established during initialization.
+The existing application title is Tailscale and its application ID is `com.ljam96.tailscale`. Preserve factual product naming and existing assets; no additional brand or voice commitment was established during initialization.
 
 ## Evidence on Hand
 
 - `IMPLEMENTATION_PLAN.md`: documented purpose, rooted LG B4 target, architecture, constraints, planned features, and acceptance criteria.
-- `app/appinfo.json`: web application runtime, application identity, and early-preview description.
+- `app/appinfo.json`: web application runtime, application identity, and description.
 - `app/index.html`: implemented TV interface, remote navigation, status/settings flows, authentication display, and diagnostics.
 - `app/assets/`: existing application icons and splash asset.
 - `service/service.js`, `init/`, and `scripts/`: service broker, background supervision/startup code, and packaging/install tooling.

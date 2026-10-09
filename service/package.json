@@ -1,7 +1,7 @@
 {
-  "name": "com.ljam.tailscale.service",
-  "version": "0.4.7",
-  "description": "Tailscale privileged service (early preview)",
+  "name": "com.ljam96.tailscale.service",
+  "version": "0.4.8",
+  "description": "Tailscale privileged service",
   "main": "service.js",
   "private": true,
   "license": "Apache-2.0"

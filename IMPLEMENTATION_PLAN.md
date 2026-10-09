@@ -311,10 +311,10 @@ Confirmed on target TV (OLED65B4, webOS 10.2.2): Luna JS services run in an indi
 Suggested identity:
 
 ```text
-com.ljam.tailscale.service
+com.ljam96.tailscale.service
 ```
 
-The UI application id (for example `com.ljam.tailscale.app`) must share the same id prefix as the service. Distribution is via Homebrew Channel sideload / `.ipk`, not the LG Content Store. `appinfo.json` ids, `services.json`, and LS2 role files must be kept consistent.
+The UI application id (for example `com.ljam96.tailscale.app`) must share the same id prefix as the service. Distribution is via Homebrew Channel sideload / `.ipk`, not the LG Content Store. `appinfo.json` ids, `services.json`, and LS2 role files must be kept consistent.
 
 Packaging must include, in addition to `services.json`:
 

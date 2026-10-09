@@ -1,11 +1,11 @@
 #!/bin/sh
-# Generate ls-hubd dev registration for com.ljam.tailscale (mirrors appinstalld output).
+# Generate ls-hubd dev registration for com.ljam96.tailscale (mirrors appinstalld output).
 # Volatile only (/var), regenerated on boot. Safe to re-run.
 set -eu
 D=/var/luna-service2-dev
-APP=com.ljam.tailscale
-SVC=com.ljam.tailscale.service
-VER=0.4.7
+APP=com.ljam96.tailscale
+SVC=com.ljam96.tailscale.service
+VER=0.4.8
 
 printf '[D-BUS Service]\nName=%s\nExec=/usr/bin/run-js-service -n /media/developer/apps/usr/palm/services/%s\nType=dynamic\n' \
   "$SVC" "$SVC" > "$D/services.d/$SVC.service"

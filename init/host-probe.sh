@@ -4,7 +4,7 @@
 # shared with the jailed JS service. Writes service-owned files only.
 set -eu
 
-SVC_DIR="${SVC_DIR:-/media/developer/apps/usr/palm/services/com.ljam.tailscale.service}"
+SVC_DIR="${SVC_DIR:-/media/developer/apps/usr/palm/services/com.ljam96.tailscale.service}"
 VAR_DIR="$SVC_DIR/var"
 mkdir -p "$VAR_DIR"
 chmod 0777 "$VAR_DIR"

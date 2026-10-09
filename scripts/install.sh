@@ -4,7 +4,7 @@
 set -eu
 cd "$(dirname "$0")/.."
 TV="${1:-192.168.31.162}"
-PKG_ID="com.ljam.tailscale"
+PKG_ID="com.ljam96.tailscale"
 
 ./scripts/build-ipk.sh
 IPK="$(ls -t dist/*.ipk | head -1)"

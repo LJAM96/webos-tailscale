@@ -3,9 +3,9 @@
 set -eu
 cd "$(dirname "$0")/.."
 
-PKG_ID="com.ljam.tailscale"
-APP_ID="com.ljam.tailscale"
-SVC_ID="com.ljam.tailscale.service"
+PKG_ID="com.ljam96.tailscale"
+APP_ID="com.ljam96.tailscale"
+SVC_ID="com.ljam96.tailscale.service"
 VERSION="$(python3 -c 'import json;print(json.load(open("app/appinfo.json"))["version"])')"
 TS_VER="$(python3 -c 'import json;print(json.load(open("daemon/versions.json"))["tailscaleVersion"])')"
 
@@ -17,7 +17,7 @@ mkdir -p "$STAGE/data/usr/palm/services/$SVC_ID/bin"
 mkdir -p "$STAGE/data/usr/palm/packages/$PKG_ID"
 mkdir -p "$STAGE/control" dist
 
-cp app/appinfo.json app/index.html "$STAGE/data/usr/palm/applications/$APP_ID/"
+cp app/appinfo.json app/index.html app/styles.css app/app.js "$STAGE/data/usr/palm/applications/$APP_ID/"
 cp -R app/assets app/vendor "$STAGE/data/usr/palm/applications/$APP_ID/"
 cp service/services.json service/package.json service/service.js \
   "$STAGE/data/usr/palm/services/$SVC_ID/"
@@ -43,14 +43,15 @@ Package: $PKG_ID
 Version: $VERSION
 Architecture: all
 Maintainer: ljam
-Description: Tailscale client controller (early preview v$VERSION, bundled tailscaled $TS_VER)
+Description: Tailscale client controller (v$VERSION, bundled tailscaled $TS_VER)
 Section: misc
 Priority: optional
 webOS-Package-Format-Version: 2
 EOF
 
 printf '2.0\n' > "$STAGE/debian-binary"
-(cd "$STAGE/data" && tar -czf "$STAGE/data.tar.gz" usr)
+# Exclude macOS metadata (AppleDouble ._ files, .DS_Store): never ship to TV.
+(cd "$STAGE/data" && tar --exclude='._*' --exclude='.DS_Store' -czf "$STAGE/data.tar.gz" usr)
 (cd "$STAGE/control" && tar -czf "$STAGE/control.tar.gz" control)
 ABS_OUT="$(pwd)/$OUT"
 python3 scripts/mk_ipk.py "$STAGE" "$ABS_OUT"
