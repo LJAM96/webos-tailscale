@@ -1,0 +1,47 @@
+name: Check upstream Tailscale
+
+# Daily checker: compares the latest stable Tailscale release against the
+# pin on main. When a newer daemon exists and no release for it is out yet,
+# it triggers the Release IPK workflow so a matching IPK follows shortly
+# after. Never commits or releases anything itself.
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare upstream against pin
+        id: cmp
+        run: |
+          LOC=$(curl -sSI --max-time 30 https://pkgs.tailscale.com/stable/tailscale_latest_arm.tgz | grep -i '^location:' | tr -d '\r')
+          LATEST=$(printf '%s' "$LOC" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+          PINNED=$(python3 -c 'import json;print(json.load(open("daemon/versions.json"))["tailscaleVersion"])')
+          echo "latest=$LATEST pinned=$PINNED"
+          echo "latest=$LATEST" >> "$GITHUB_OUTPUT"
+          if [ -z "$LATEST" ]; then echo "could not resolve upstream"; exit 1; fi
+          if [ "$LATEST" = "$PINNED" ]; then echo "up to date"; exit 0; fi
+          HIGHER=$(printf '%s\n%s\n' "$LATEST" "$PINNED" | sort -V | tail -n 1)
+          if [ "$HIGHER" != "$LATEST" ]; then echo "pin is newer than upstream (?), skipping"; exit 0; fi
+          echo "newer=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger release if none exists yet
+        if: steps.cmp.outputs.newer == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="tailscale-${{ steps.cmp.outputs.latest }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "release $TAG already exists"
+          else
+            gh workflow run release.yml -f tailscale_version='${{ steps.cmp.outputs.latest }}'
+            echo "triggered release for ${{ steps.cmp.outputs.latest }}"
+          fi

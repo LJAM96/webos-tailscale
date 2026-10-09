@@ -1,0 +1,85 @@
+name: Release IPK
+
+# Manual release: builds the IPK against a pinned Tailscale daemon version
+# (latest stable unless overridden) and publishes it as a GitHub Release.
+# The release/tag version is derived from the Tailscale version, e.g.
+# tailscale-1.104.1. Pins are committed back to main so the repo always
+# matches the released IPK.
+on:
+  workflow_dispatch:
+    inputs:
+      tailscale_version:
+        description: 'Tailscale version, e.g. 1.104.1 (default: latest stable)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve Tailscale version and hash
+        id: ver
+        run: |
+          VER='${{ inputs.tailscale_version }}'
+          if [ -z "$VER" ]; then
+            LOC=$(curl -sSI --max-time 30 https://pkgs.tailscale.com/stable/tailscale_latest_arm.tgz | grep -i '^location:' | tr -d '\r')
+            VER=$(printf '%s' "$LOC" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+          fi
+          if ! printf '%s' "$VER" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "could not resolve a Tailscale version" >&2; exit 1
+          fi
+          URL="https://pkgs.tailscale.com/stable/tailscale_${VER}_arm.tgz"
+          SHA=$(curl -sSL --max-time 30 "$URL.sha256" | awk '{print $1}')
+          if ! printf '%s' "$SHA" | grep -qE '^[0-9a-f]{64}$'; then
+            echo "could not fetch a valid sha256 for $VER" >&2; exit 1
+          fi
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Resolved Tailscale $VER ($SHA)"
+
+      - name: Bump pins
+        run: ./scripts/bump-tailscale.sh '${{ steps.ver.outputs.version }}' '${{ steps.ver.outputs.sha }}'
+
+      - name: Fetch daemon and verify hash
+        run: ./scripts/fetch-tailscale.sh
+
+      - name: Unit tests
+        run: python3 -m pytest tests/ -q
+
+      - name: Build IPK
+        run: ./scripts/build-ipk.sh
+
+      - name: Commit pins back to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add daemon/versions.json service/service.js tests/fixture.js THIRD_PARTY_NOTICES.md
+          if git diff --cached --quiet; then
+            echo "pins already current, nothing to commit"
+          else
+            git commit -m "Pin Tailscale daemon ${{ steps.ver.outputs.version }}" && git push
+          fi
+
+      - name: Checksums
+        run: |
+          cd dist && sha256sum ./*.ipk > "com.ljam96.tailscale_${{ steps.ver.outputs.version }}_checksums.txt" && cd ..
+
+      - name: Create tag and release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VER='${{ steps.ver.outputs.version }}'
+          TAG="tailscale-$VER"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            TAG="$TAG-b${{ github.run_number }}"
+          fi
+          git tag "$TAG" && git push origin "$TAG"
+          gh release create "$TAG" \
+            --title "webOS Tailscale (daemon $VER)" \
+            --notes "IPK built from main with pinned Tailscale daemon $VER (official static ARM, sha256-verified). App $(python3 -c 'import json;print(json.load(open("app/appinfo.json"))["version"])'). Install with ./scripts/install.sh <tv-ip>; node identity is preserved on upgrade." \
+            dist/*.ipk "dist/com.ljam96.tailscale_${VER}_checksums.txt"

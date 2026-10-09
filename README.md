@@ -35,12 +35,20 @@ disconnect Tailscale.
 
 ## Updating
 
-- App updates: rebuild and reinstall the same way; node identity is preserved.
-- Daemon updates: Settings → Support → check for updates (notify only),
+- App updates: rebuild and reinstall the same way; node identity is preserved.- Daemon updates: Settings → Support → check for updates (notify only),
   then Install update. Releases are untested on this TV until confirmed.
   Updates initiated from the Tailscale admin portal are not supported on
   this layout; use the on-TV Install action.
 - Pinned daemon: `daemon/versions.json` (currently 1.104.1).
+
+## Releases (CI)
+
+- **Release IPK** workflow (manual): builds the IPK against the latest
+  stable daemon (or a given version), commits the pins back to main, and
+  publishes the IPK under GitHub Releases. Release/tag versions derive
+  from the Tailscale version, e.g. `tailscale-1.104.1`.
+- **Check upstream** workflow (daily): compares latest stable against the
+  pin and triggers a release build when a newer daemon appears.
 
 ## Uninstall
 
