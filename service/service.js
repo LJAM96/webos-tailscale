@@ -205,7 +205,7 @@ service.register('getDiagnostics', function (msg) {
         returnValue: true,
         appVersion: PKG_VERSION,
         serviceVersion: PKG_VERSION,
-        tailscaleVersion: d.runningVersion || '1.104.1',
+        tailscaleVersion: d.runningVersion || '1.104.2',
         daemon: d.daemon,
         jailed: true,
         hostProbed: facts.present,
