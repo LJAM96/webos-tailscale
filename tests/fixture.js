@@ -29,7 +29,7 @@
     else if (method === 'disconnect') { backend = 'Stopped'; response = { returnValue: true }; }
     else if (method === 'logout') { backend = 'NeedsLogin'; response = { returnValue: true }; }
     else if (method === 'updateDaemon') response = { returnValue: true, updated: false, previous: '1.102.5', current: '1.102.5' };
-    else if (method === 'getDiagnostics') response = scenario === 'diagnostics-failure' ? { returnValue: false, error: 'service-unavailable' } : { returnValue: true, appVersion: '0.4.8', serviceVersion: '0.4.8', tailscaleVersion: '1.104.2', daemon: 'running', hostProbed: true, host: { tunExists: true, tunReadable: true, archUserspace: 'arm', webosVersion: 'Fixture only', netfilter: false }, prefs: prefs, jailed: true, arch: 'arm', node: 'fixture' };
+    else if (method === 'getDiagnostics') response = scenario === 'diagnostics-failure' ? { returnValue: false, error: 'service-unavailable' } : { returnValue: true, appVersion: '0.4.8', serviceVersion: '0.4.8', tailscaleVersion: '1.104.4', daemon: 'running', hostProbed: true, host: { tunExists: true, tunReadable: true, archUserspace: 'arm', webosVersion: 'Fixture only', netfilter: false }, prefs: prefs, jailed: true, arch: 'arm', node: 'fixture' };
     else response = { returnValue: false, error: 'unknown-method' };
     if (scenario === 'malformed-status' && method === 'status') response = { returnValue: true, backendState: 'UnexpectedState', needsLogin: false };
     if (scenario === 'malformed-peers' && method === 'getPeers') response = { returnValue: true, peers: [null] };

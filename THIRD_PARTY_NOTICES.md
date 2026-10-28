@@ -3,7 +3,7 @@
 ## Tailscale
 
 Source: https://tailscale.com / https://github.com/tailscale/tailscale
-Pinned release: 1.104.2 (`daemon/versions.json`), official static ARM build.
+Pinned release: 1.104.4 (`daemon/versions.json`), official static ARM build.
 Licence: BSD 3-Clause. See https://github.com/tailscale/tailscale/blob/main/LICENSE.
 
 ## qrcode-generator (Kazuhiko Arase)
