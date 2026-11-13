@@ -1,10 +1,10 @@
 {
-  "tailscaleVersion": "1.104.6",
+  "tailscaleVersion": "1.104.7",
   "targets": {
     "arm": {
       "goarm": "5",
-      "url": "https://pkgs.tailscale.com/stable/tailscale_1.104.6_arm.tgz",
-      "sha256": "98be19a248544f0d7809b71c2b6c3d1cb200aa347d3d0a47d9034dec5a26fc69",
+      "url": "https://pkgs.tailscale.com/stable/tailscale_1.104.7_arm.tgz",
+      "sha256": "1c753fef45d497491081db37552b7a2a42c7932292743bf6936cb1a42b6bceb0",
       "notes": "Official static 32-bit ARM build. Runs unmodified on LG B4 (Realtek RTD2885P, 32-bit userspace, glibc 2.34). Verified 2026-10-04 on 1.102.4 (kernel TUN, tailscale0, auth, peer ping); 1.102.5 self-updated on-device 2026-10-06; 1.104.1 self-updated on-device 2026-10-08 via explicit update action, confirmed Running with same node identity."
     }
   }
